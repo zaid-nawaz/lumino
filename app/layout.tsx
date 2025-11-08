@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,13 +29,66 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+return (
+  <ClerkProvider>
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <head>
+        {/* Font Awesome */}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
+        {/* Google Font for brand */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* Navbar */}
+        <header className="flex justify-between items-center px-6 sm:px-10 h-16 shadow-sm bg-white/70 backdrop-blur-md border-b border-gray-200">
+          {/* Left spacing placeholder (for centering the logo visually) */}
+          <div className="w-24 sm:w-32" />
+
+          {/* Center logo */}
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <a
+              href="/"
+              className="text-2xl sm:text-3xl font-bold"
+              style={{
+                fontFamily: "'Orbitron', sans-serif",
+                background: "linear-gradient(90deg, #6C47FF, #00C2FF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Lumino
+            </a>
+          </div>
+
+          {/* Right side auth buttons */}
+          <div className="flex justify-end items-center gap-3 sm:gap-4 w-24 sm:w-32">
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton>
+                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-11 px-4 sm:px-5 cursor-pointer hover:bg-[#5b3de5] transition">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
+        </header>
+
         {children}
       </body>
     </html>
-  );
+  </ClerkProvider>
+);
+
 }
